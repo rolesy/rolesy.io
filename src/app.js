@@ -8,8 +8,16 @@ import morgan from 'morgan';
 
 import Cors from './configs/cors';
 import env from './configs/index';
-import { handledFatalException, normalizePort } from './utils/libs/utils';
+import {
+  handledFatalException,
+  normalizePort,
+  getDatabaseUrlMongo,
+  getDatabaseUrlRedis,
+} from './utils/libs/utils';
 import { notFoundHandler, wrapErrors, errorHandler } from './utils/middlewares/errorHandler';
+import Mongo from './db/mongo';
+import Redis from './db/redis';
+import logger from './utils/libs/logger';
 
 // Express instance
 const app = express();
@@ -17,6 +25,10 @@ const app = express();
 // Server initializations
 const server = http.createServer(app);
 const io = new WebSocketServer(server);
+
+// Databases Instances
+const mongoDb = new Mongo(getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'));
+const redisDb = new Redis(getDatabaseUrlRedis(env.ENVIRONMENT || 'DEVELOPMENT'));
 
 // Global middleares
 app.use(cors(Cors.setCorsConfiguration()));
@@ -28,7 +40,7 @@ app.use(morgan(env.ENVIRONMENT === 'DEVELOPMENT' ? 'dev' : 'combined'));
 
 // Socket instance
 io.on('connection', (socket) => {
-  console.log(`New socket connection ${socket.id}`);
+  logger.info(`New socket connection ${socket.id}`);
 });
 
 // Routes
@@ -47,16 +59,28 @@ const startServer = async (port) => {
     if (!normalizedPort) throw new Error('No valid PORT configuration. Please check');
 
     app.listen(env.PORT, () => {
-      console.log(`Running on http://localhost:${port}`);
+      logger.info(`Running on http://localhost:${port}`);
     });
+
+    await mongoDb.connectMongoDB();
+    const redisClient = redisDb.connectRedisDB();
+
+    if (!redisClient) {
+      logger.error(('Redis DB no connected'));
+    }
+
+    redisClient.on('error', () => {});
   } catch (error) {
+    // Handled process exceptions
     process.on('uncaughtException', handledFatalException(error));
     process.on('unhandledRejection', handledFatalException(error));
 
-    console.log(error);
+    // Handled DB exceptions - MongoDB
+    process.on('SIGINT', mongoDb.closeConnectionCrashNodeProcess());
+    process.on('SIGTERM', mongoDb.closeConnectionCrashNodeProcess());
+
+    logger.error(error);
   }
 };
-
-// Handled process exceptions
 
 export default startServer;
