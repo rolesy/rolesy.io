@@ -82,4 +82,7 @@ build
 # Environment variables
 .env
 
+# App logs
+logs
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,windows
