@@ -1,44 +1,61 @@
 import express from 'express';
-import http from 'http';
-import { Server as WebSocketServer } from 'socket.io';
 import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
+import os from 'os';
 
 import Cors from './configs/cors';
 import env from './configs/index';
-import { handledFatalException, normalizePort } from './utils/libs/utils';
-import { notFoundHandler, wrapErrors, errorHandler } from './utils/middlewares/errorHandler';
+import {
+  notFoundHandler, logError,
+} from './utils/middlewares/errorHandler';
+import logger from './utils/libs/logger';
+import {
+  handledFatalException,
+  normalizePort,
+  getDatabaseUrlMongo,
+} from './utils/libs/utils';
+import Mongo from './db/mongo';
+
+import routerV1 from './components/v1/router.v1';
+
+// Databases Instances
+const mongoDb = new Mongo(getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'));
 
 // Express instance
 const app = express();
 
-// Server initializations
-const server = http.createServer(app);
-const io = new WebSocketServer(server);
-
 // Global middleares
 app.use(cors(Cors.setCorsConfiguration()));
-app.use(compression);
+app.use(compression());
 app.use(helmet());
 app.use(express.json({ limit: '50 mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50 mb', parameterLimit: 50000 }));
 app.use(morgan(env.ENVIRONMENT === 'DEVELOPMENT' ? 'dev' : 'combined'));
 
-// Socket instance
-io.on('connection', (socket) => {
-  console.log(`New socket connection ${socket.id}`);
-});
-
 // Routes
+routerV1(app);
+
+app.get('/', (req, res) => res.status(200).send('Welcome to Rolesy.io API'));
+app.get('/health-check', (req, res) => res.status(200).json({
+  status: 200,
+  message: 'Health check',
+  data: {
+    server: {
+      os: os.version(),
+      host: os.hostname(),
+    },
+    dbStatus: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED',
+  },
+}));
 
 // Not found resource error handler
 app.use(notFoundHandler);
 
-// Error Handlers
-app.use(wrapErrors);
-app.use(errorHandler);
+// Error Handler
+app.use(logError);
 
 const startServer = async (port) => {
   try {
@@ -47,16 +64,24 @@ const startServer = async (port) => {
     if (!normalizedPort) throw new Error('No valid PORT configuration. Please check');
 
     app.listen(env.PORT, () => {
-      console.log(`Running on http://localhost:${port}`);
+      logger.info(`Running on http://localhost:${port}`);
     });
+
+    await mongoDb.connectMongoDB();
   } catch (error) {
+    // Handled process exceptions
     process.on('uncaughtException', handledFatalException(error));
     process.on('unhandledRejection', handledFatalException(error));
 
-    console.log(error);
+    // Handled DB exceptions - MongoDB
+    process.on('SIGINT', mongoDb.closeConnectionCrashNodeProcess());
+    process.on('SIGTERM', mongoDb.closeConnectionCrashNodeProcess());
+
+    logger.error(error);
   }
 };
 
-// Handled process exceptions
-
-export default startServer;
+export default {
+  startServer,
+  app,
+};
