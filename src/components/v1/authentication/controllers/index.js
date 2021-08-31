@@ -1,11 +1,13 @@
-import getSessionToken from '../services';
+import authenticationServices from '../services';
 
 const getToken = async (req, res) => {
   res.status(201).json({
     status: 201,
     message: 'Success',
-    data: await getSessionToken({ ...req.body }),
+    data: await authenticationServices.getSessionToken({ ...req.body }),
   });
 };
 
-export default getToken;
+export default {
+  getToken,
+};

@@ -1,11 +1,13 @@
-import createNewUser from '../services';
+import userServices from '../services';
 
 const createUser = async (req, res) => {
   res.status(201).json({
     status: 201,
     message: 'Success',
-    data: await createNewUser({ ...req.body }),
+    data: await userServices.createNewUser({ ...req.body }),
   });
 };
 
-export default createUser;
+export default {
+  createUser,
+};
