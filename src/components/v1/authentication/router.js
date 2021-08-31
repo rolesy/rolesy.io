@@ -2,12 +2,12 @@ import { Router } from 'express';
 
 import asyncHandler from '../../../utils/middlewares/asyncHandler';
 import requestSchemaHandler from '../../../utils/middlewares/requestSchemaHandler';
-import getToken from './controllers';
+import authenticationController from './controllers';
 
-import loginSchema from './schemas';
+import authenticationSchemas from './schemas';
 
 const router = Router();
 
-router.post('/login', requestSchemaHandler(loginSchema), asyncHandler(getToken));
+router.post('/login', requestSchemaHandler(authenticationSchemas.loginSchema), asyncHandler(authenticationController.getToken));
 
 export default router;
