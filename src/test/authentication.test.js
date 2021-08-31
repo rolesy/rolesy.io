@@ -11,8 +11,8 @@ const mongoDb = new Mongo(getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'))
 describe('Component - authentication', () => {
   test('Endpoint - Get session token - Ok credentials status code should be 201, content type JSON', async () => {
     const credentials = {
-      username: 'test1',
-      password: 'Aasdkjald12*',
+      username: 'user-tests',
+      password: 'Usertests123*',
     };
 
     await mongoDb.connectMongoDB();
@@ -25,7 +25,7 @@ describe('Component - authentication', () => {
 
   test('Endpoint - Get session token - Bad credentials status code should be 400, content type JSON', async () => {
     const credentials = {
-      username: 'test1',
+      username: 'bad-credentials',
       password: 'Aasdkjald12',
     };
 
@@ -39,8 +39,8 @@ describe('Component - authentication', () => {
 
   test('Endpoint - Get session token - Should return a object with a token property that is an String', async () => {
     const credentials = {
-      username: 'test1',
-      password: 'Aasdkjald12*',
+      username: 'user-tests',
+      password: 'Usertests123*',
     };
 
     await mongoDb.connectMongoDB();
