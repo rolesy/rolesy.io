@@ -1,19 +1,20 @@
 import { Router } from "express";
 
 import asyncHandler from "../../../utils/middlewares/asyncHandler";
+import asyncHandler from "../../../utils/middlewares/asyncHandler";
 import requestSchemaHandler from "../../../utils/middlewares/requestSchemaHandler";
 import loggedIn from "../../../utils/middlewares/autheticationHandler";
-import scopeController from "./controllers";
+import accountController from "./controllers";
 
-import scopeSchemas from "./schemas";
+import accountSchema from "./schemas";
 
 const router = Router();
 
 router.post(
   "/",
   loggedIn,
-  requestSchemaHandler(scopeSchemas.createScopeSchema),
-  asyncHandler(scopeController.createScope)
+  requestSchemaHandler(accountSchema.createAccountSchema),
+  asyncHandler(accountController.createAccount)
 );
 
 export default router;
