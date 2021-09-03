@@ -6,6 +6,7 @@ const accountSchema = mongoose.Schema(
       type: String,
       uppercase: true,
       required: true,
+      unique: true,
     },
     description: {
       type: String,
