@@ -21,7 +21,7 @@ describe('Component - authentication', () => {
       .send(credentials)
       .expect(201)
       .expect('Content-Type', /application\/json/);
-  });
+  }, 25000);
 
   test('Endpoint - Get session token - Bad credentials status code should be 400, content type JSON', async () => {
     const credentials = {
@@ -49,7 +49,7 @@ describe('Component - authentication', () => {
     expect(response.body.data).toEqual(expect.objectContaining({
       token: expect.any(String),
     }));
-  });
+  }, 25000);
 
   afterAll(() => {
     mongoose.connection.close();
