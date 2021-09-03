@@ -7,6 +7,7 @@
     "start": "node --es-module-specifier-resolution=node src/index.js",
     "test": "jest --verbose --silent",
     "test:watch": "npm run test -- --watch",
+    "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
     "lint": "echo Working on",
     "lint-fix": "eslint --fix .  --ext .js"
   },
