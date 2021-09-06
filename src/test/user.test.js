@@ -11,7 +11,7 @@ const mongoDb = new Mongo(getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'))
 describe('Component - user', () => {
   test('Endpoint - Create User - If there is not bearer token should return status code 401', async () => {
     const newUser = {
-      username: 'user-tests',
+      username: 'user-test_1',
       password: 'Usertests123*',
     };
 
@@ -20,7 +20,7 @@ describe('Component - user', () => {
     await api.post('/api/v1/user').send(newUser)
       .expect('Content-Type', /application\/json/)
       .expect(401);
-  });
+  }, 25000);
 
   test('Endpoint - Create User - If username already exist should return status code 400', async () => {
     const newUser = {
