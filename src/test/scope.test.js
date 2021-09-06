@@ -10,8 +10,8 @@ const mongoDb = new Mongo(
   getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'),
 );
 
-describe('Component - scope', () => {
-  test('Endpoint - Create Scope - If there is not bearer token should return status code 401', async () => {
+describe('Create Scope', () => {
+  test('If there is not bearer token should return status code 401', async () => {
     const newScope = {
       name: 'CREATE_ACCOUNT',
       description: 'Allow account creation proccess',
@@ -28,7 +28,7 @@ describe('Component - scope', () => {
       .expect(401);
   }, 25000);
 
-  test('Endpoint - Create Scope - If scope name is send in lowercase, should return a status code 400', async () => {
+  test('If scope name is send in lowercase, should return a status code 400', async () => {
     const newScope = {
       name: 'create_account',
       description: 'Allow account creation proccess',
@@ -54,7 +54,7 @@ describe('Component - scope', () => {
       .expect(400);
   });
 
-  test('Endpoint - Create Scope - If scope name is not send in the request, should return a status code 400', async () => {
+  test('If scope name is not send in the request, should return a status code 400', async () => {
     const newScope = {
       description: 'Allow account creation proccess',
       module: 'ACCOUNTS',
@@ -79,7 +79,7 @@ describe('Component - scope', () => {
       .expect(400);
   });
 
-  test('Endpoint - Create Scope - If scope description is not send in the request, should return a status code 400', async () => {
+  test('If scope description is not send in the request, should return a status code 400', async () => {
     const newScope = {
       name: 'CREATE_ACCOUNT',
       module: 'ACCOUNTS',
@@ -104,7 +104,7 @@ describe('Component - scope', () => {
       .expect(400);
   });
 
-  test('Endpoint - Create Scope - If scope description has more that 200 characters in the request, should return a status code 400', async () => {
+  test('If scope description has more that 200 characters in the request, should return a status code 400', async () => {
     const newScope = {
       name: 'CREATE_ACCOUNT',
       description:
@@ -151,7 +151,7 @@ describe('Component - scope', () => {
       .expect(400);
   });
 
-  test('Endpoint - Create Scope - If scope module is different to ACCOUNT or USERS, should return a status code 400', async () => {
+  test('If scope module is different to ACCOUNT or USERS, should return a status code 400', async () => {
     const newScope = {
       name: 'CREATE_ACCOUNT',
       description: 'Scope description',
@@ -175,6 +175,104 @@ describe('Component - scope', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
+  });
+
+  afterAll(() => {
+    mongoose.connection.close();
+  });
+});
+
+describe('Get Scope by ID', () => {
+  test('If there is not bearer token should return status code 401', async () => {
+    await mongoDb.connectMongoDB();
+
+    await api
+      .get('/api/v1/scope/61364d7f79978644195b1926')
+      .expect('Content-Type', /application\/json/)
+      .expect(401);
+  }, 25000);
+
+  test('If there is not sent an ID should return a status code 404', async () => {
+    const credentials = {
+      username: 'user-tests',
+      password: 'Usertests123*',
+    };
+
+    await mongoDb.connectMongoDB();
+
+    const responseLogin = await api.post('/api/v1/authentication/login').send(credentials);
+    const { token } = responseLogin.body.data;
+
+    await api
+      .get('/api/v1/scope')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /application\/json/)
+      .expect(404);
+  });
+
+  test('If the ID sent in the request is not a valid Object ID format', async () => {
+    const credentials = {
+      username: 'user-tests',
+      password: 'Usertests123*',
+    };
+
+    await mongoDb.connectMongoDB();
+
+    const responseLogin = await api.post('/api/v1/authentication/login').send(credentials);
+    const { token } = responseLogin.body.data;
+
+    await api
+      .get('/api/v1/scope/TEST_ID_SENT')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /application\/json/)
+      .expect(400);
+  });
+
+  test('If the ID has a correct format but there is any scope saved with that ID should return a 400', async () => {
+    const credentials = {
+      username: 'user-tests',
+      password: 'Usertests123*',
+    };
+
+    await mongoDb.connectMongoDB();
+
+    const responseLogin = await api.post('/api/v1/authentication/login').send(credentials);
+    const { token } = responseLogin.body.data;
+
+    const response = await api
+      .get('/api/v1/scope/61364d7f79978644195b1927')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(400);
+    expect(response.body)
+      .toEqual(expect.objectContaining({
+        error: expect.any(Boolean),
+        message: expect.any(String),
+      }));
+  });
+
+  test('If there is a valid ID and find a document should return the document and a status 200', async () => {
+    const credentials = {
+      username: 'user-tests',
+      password: 'Usertests123*',
+    };
+
+    await mongoDb.connectMongoDB();
+
+    const responseLogin = await api.post('/api/v1/authentication/login').send(credentials);
+    const { token } = responseLogin.body.data;
+
+    const response = await api
+      .get('/api/v1/scope/61364d7f79978644195b1926')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.data).toEqual(expect.objectContaining({
+      active: expect.any(Boolean),
+      _id: expect.any(String),
+      name: expect.any(String),
+      description: expect.any(String),
+    }));
   });
 
   afterAll(() => {
