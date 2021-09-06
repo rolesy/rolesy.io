@@ -1,21 +1,24 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const scopeSchema = mongoose.Schema(
+const accountSchema = mongoose.Schema(
   {
     name: {
       type: String,
       uppercase: true,
       required: true,
+      unique: true,
     },
     description: {
       type: String,
       uppercase: true,
-      unique: true,
       required: true,
     },
-    module: {
-      type: String,
-      uppercase: true,
+    billingInformation: {
+      type: Object,
+      required: true,
+    },
+    contactInformation: {
+      type: Object,
       required: true,
     },
     active: {
@@ -26,9 +29,9 @@ const scopeSchema = mongoose.Schema(
   },
   {
     timestamp: true,
-  }
+  },
 );
 
-const scopeModel = mongoose.model("scopes", scopeSchema);
+const accountModel = mongoose.model('accounts', accountSchema);
 
-export default scopeModel;
+export default accountModel;
