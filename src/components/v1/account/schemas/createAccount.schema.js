@@ -1,22 +1,11 @@
 import joi from "joi";
 
-const createAccountSchema = joi.object({
+const contact_informationSchema = joi.object().keys({
   name: joi.string().trim().uppercase().required().messages({
     "any.required": "name is required (Upper case)",
   }),
-  description: joi.string().trim().max(200).required().messages({
-    "any.required": "description scope is required",
-  }),
-  billingInformation: billingInformationSchema.required(),
-  contactInformation: contactInformationSchema,
-  active: joi.boolean().required(),
-});
-
-const contactInformationSchema = joi.object({
-  name: joi.string().trim().uppercase().required().messages({
-    "any.required": "name is required (Upper case)",
-  }),
-  phone: string()
+  phone: joi
+    .string()
     .trim()
     .regex(new RegExp("^[0-9]{10}$"))
     .allow("")
@@ -24,19 +13,20 @@ const contactInformationSchema = joi.object({
     .messages({
       "any required": 'Please provide "bill_contact_phone" property',
     }),
-  email: string().trim().required().messages({
+  email: joi.string().trim().required().messages({
     "any required": 'Please provide "bill_contact_email" property',
   }),
 });
 
-const billingInformationSchema = joi.object({
+const billing_informationSchema = joi.object().keys({
   company_name: joi.string().trim().uppercase().required().messages({
     "any.required": "name is required (Upper case)",
   }),
   name: joi.string().trim().uppercase().required().messages({
     "any.required": "name is required (Upper case)",
   }),
-  phone: string()
+  phone: joi
+    .string()
     .trim()
     .regex(new RegExp("^[0-9]{10}$"))
     .allow("")
@@ -44,22 +34,30 @@ const billingInformationSchema = joi.object({
     .messages({
       "any required": 'Please provide "bill_contact_phone" property',
     }),
-  email: string().trim().required().messages({
+  email: joi.string().trim().required().messages({
     "any required": 'Please provide "bill_contact_email" property',
   }),
-  address: string().trim().required().messages({
+  address: joi.string().trim().required().messages({
     "any required": 'Please provide "bill_contact_email" property',
   }),
-  zip_code: string().trim().uppercase().alphanum().max(6).required().messages({
-    "any required": 'Please provide "bill_zip_code" property',
-  }),
-  city: string().trim().required().messages({
+  zip_code: joi
+    .string()
+    .trim()
+    .uppercase()
+    .alphanum()
+    .max(6)
+    .required()
+    .messages({
+      "any required": 'Please provide "bill_zip_code" property',
+    }),
+  city: joi.string().trim().required().messages({
     "any required": 'Please provide "bill_city" property',
   }),
-  country: string().trim().uppercase().required().messages({
+  country: joi.string().trim().uppercase().required().messages({
     "any required": 'Please provide "bill_country" property',
   }),
-  state: string()
+  state: joi
+    .string()
     .trim()
     .regex(new RegExp("^[A-Z]{2}$"))
     .uppercase()
@@ -68,3 +66,17 @@ const billingInformationSchema = joi.object({
       "any required": 'Please provide "bill_state" property',
     }),
 });
+
+const createAccountSchema = joi.object({
+  name: joi.string().trim().uppercase().required().messages({
+    "any.required": "name is required (Upper case)",
+  }),
+  description: joi.string().trim().max(200).required().messages({
+    "any.required": "description scope is required",
+  }),
+  billing_information: billing_informationSchema,
+  contact_information: contact_informationSchema,
+  active: joi.boolean().required(),
+});
+
+export default createAccountSchema;

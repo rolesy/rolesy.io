@@ -1,12 +1,12 @@
 import boom from "@hapi/boom";
 
-import accountDao from "../DAO";
+import accountDao from "../dao";
 
 const createAccount = async ({
   name,
   description,
-  billing,
-  contactInformation,
+  billing_information,
+  contact_information,
   active,
 }) => {
   const validateUniqueAccount = await accountDao.findAccountByName({ name });
@@ -17,8 +17,8 @@ const createAccount = async ({
   const createdAccount = await accountDao.newAccount({
     name,
     description,
-    billing,
-    contactInformation,
+    billing_information,
+    contact_information,
     active,
   });
 

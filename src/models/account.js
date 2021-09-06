@@ -11,10 +11,9 @@ const accountSchema = mongoose.Schema(
     description: {
       type: String,
       uppercase: true,
-      unique: true,
       required: true,
     },
-    billing: {
+    billing_information: {
       type: Object,
       required: true,
     },
