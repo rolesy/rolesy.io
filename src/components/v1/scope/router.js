@@ -15,5 +15,11 @@ router.post(
   requestSchemaHandler(scopeSchemas.createScopeSchema),
   asyncHandler(scopeController.createScope)
 );
+router.get(
+  "/:id",
+  loggedIn,
+  requestSchemaHandler(scopeSchemas.getScopeByIdSchema, "params"),
+  asyncHandler(scopeController.getScopeById)
+);
 
 export default router;
