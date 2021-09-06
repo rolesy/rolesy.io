@@ -1,4 +1,4 @@
-import createAccount from "./createAccount.service";
+import createAccount from './createAccount';
 
 export default {
   createAccount,

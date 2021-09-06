@@ -1,9 +1,9 @@
-import accountServices from "../services";
+import accountServices from '../services';
 
 const createAccount = async (req, res) => {
   res.status(201).json({
     status: 201,
-    message: "Success",
+    message: 'Success',
     data: await accountServices.createAccount({ ...req.body }),
   });
 };
