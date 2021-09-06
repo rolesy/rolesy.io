@@ -1,21 +1,24 @@
 import mongoose from "mongoose";
 
-const scopeSchema = mongoose.Schema(
+const accountSchema = mongoose.Schema(
   {
     name: {
       type: String,
       uppercase: true,
       required: true,
+      unique: true,
     },
     description: {
       type: String,
       uppercase: true,
-      unique: true,
       required: true,
     },
-    module: {
-      type: String,
-      uppercase: true,
+    billing_information: {
+      type: Object,
+      required: true,
+    },
+    contact_information: {
+      type: Object,
       required: true,
     },
     active: {
@@ -29,6 +32,6 @@ const scopeSchema = mongoose.Schema(
   }
 );
 
-const scopeModel = mongoose.model("scopes", scopeSchema);
+const accountModel = mongoose.model("accounts", accountSchema);
 
-export default scopeModel;
+export default accountModel;
