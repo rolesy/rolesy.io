@@ -1,6 +1,6 @@
 import boom from '@hapi/boom';
 
-import scopeDao from '../DAO';
+import scopeDao from '../dao';
 
 const getScopeById = async (id) => {
   const scope = await scopeDao.findScopeById(id);
