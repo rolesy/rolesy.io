@@ -1,7 +1,7 @@
 import cryptoJs from 'crypto-js';
 import boom from '@hapi/boom';
 
-import userDao from '../DAO';
+import userDao from '../dao';
 import env from '../../../../configs';
 
 const createUser = async ({ username, password }) => {
