@@ -10,5 +10,6 @@ import scopeSchemas from './schemas';
 const router = Router();
 
 router.post('/', loggedIn, requestSchemaHandler(scopeSchemas.createScopeSchema), asyncHandler(scopeController.createScope));
+router.get('/:id', loggedIn, requestSchemaHandler(scopeSchemas.getScopeByIdSchema, 'params'), asyncHandler(scopeController.getScopeById));
 
 export default router;
