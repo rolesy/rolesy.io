@@ -8,6 +8,15 @@ const createScope = async (req, res) => {
   });
 };
 
+const getScopeById = async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: 'Success',
+    data: await scopeServices.getScopeById(req.params.id),
+  });
+};
+
 export default {
   createScope,
+  getScopeById,
 };

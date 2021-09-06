@@ -2,7 +2,7 @@ import cryptoJs from 'crypto-js';
 import boom from '@hapi/boom';
 import jwt from 'jsonwebtoken';
 
-import getUserByUsername from '../DAO';
+import getUserByUsername from '../dao';
 import env from '../../../../configs';
 
 const getSessionToken = async ({ username, password }) => {

@@ -1,6 +1,6 @@
 import boom from '@hapi/boom';
 
-import scopeDao from '../DAO';
+import scopeDao from '../dao';
 
 const createScope = async ({
   name,
