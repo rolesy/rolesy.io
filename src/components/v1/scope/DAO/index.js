@@ -20,9 +20,17 @@ const findScopes = ({
   .lean()
   .exec();
 
+const findScopesCount = ({
+  query,
+}) => scopeModel.find(query.filters)
+  .countDocuments()
+  .lean()
+  .exec();
+
 export default {
   findScopeByNameAndModule,
   findScopeById,
   newScope,
   findScopes,
+  findScopesCount,
 };

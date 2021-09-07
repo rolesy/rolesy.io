@@ -31,15 +31,22 @@ const getScopes = async ({
 
   if (order) { query.order = { [order]: -1 }; }
 
-  const result = await scopeDao.findScopes({
-    page,
-    limit,
-    query: query.filters.$and.length
-      ? { filters: { $and: query.filters.$and }, order: query.order }
-      : { filters: { }, order: query.order },
-  });
+  const [result, count] = await Promise.all([
+    scopeDao.findScopes({
+      page,
+      limit,
+      query: query.filters.$and.length
+        ? { filters: { $and: query.filters.$and }, order: query.order }
+        : { filters: { }, order: query.order },
+    }),
+    scopeDao.findScopesCount({
+      query: query.filters.$and.length
+        ? { filters: { $and: query.filters.$and }, order: query.order }
+        : { filters: { }, order: query.order },
+    }),
+  ]);
 
-  return result;
+  return { scopes: result, records: count };
 };
 
 export default getScopes;
