@@ -22,4 +22,11 @@ router.get(
   asyncHandler(scopeController.getScopeById),
 );
 
+router.get(
+  '/',
+  loggedIn,
+  requestSchemaHandler(scopeSchemas.getScopesSchema, 'query'),
+  asyncHandler(scopeController.getScopes),
+);
+
 export default router;

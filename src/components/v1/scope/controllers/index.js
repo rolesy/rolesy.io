@@ -16,7 +16,16 @@ const getScopeById = async (req, res) => {
   });
 };
 
+const getScopes = async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: 'Success',
+    data: await scopeServices.getScopes(req.query),
+  });
+};
+
 export default {
   createScope,
   getScopeById,
+  getScopes,
 };

@@ -28,7 +28,7 @@ const accountSchema = mongoose.Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   },
 );
 
