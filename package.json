@@ -4,12 +4,13 @@
   "description": "Recruitment process app managment",
   "main": "index.js",
   "scripts": {
-    "start": "node --es-module-specifier-resolution=node src/index.js",
+    "start": "npm run build && node --es-module-specifier-resolution=node ./src/index.js",
     "test": "jest --verbose --silent",
     "test:watch": "npm run test -- --watch",
     "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
     "lint": "echo Working on",
-    "lint-fix": "eslint --fix .  --ext .js"
+    "lint-fix": "eslint --fix .  --ext .js",
+    "build": "shx rm -rf build && babel src --out-dir build"
   },
   "keywords": [
     "rolesy"
@@ -50,6 +51,7 @@
     "mongoose": "^5.13.8",
     "morgan": "^1.10.0",
     "redis": "^3.1.2",
+    "shx": "^0.3.3",
     "socket.io": "^4.1.3",
     "winston": "^3.3.3"
   },
