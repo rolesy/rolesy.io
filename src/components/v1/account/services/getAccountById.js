@@ -1,6 +1,6 @@
-import boom from "@hapi/boom";
+import boom from '@hapi/boom';
 
-import accountDao from "../dao";
+import accountDao from '../dao';
 
 const getAccountById = async (id) => {
   const accountDetail = await accountDao.getAccountById(id);

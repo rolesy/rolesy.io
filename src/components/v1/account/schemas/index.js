@@ -1,5 +1,5 @@
-import createAccountSchema from "./createAccountSchema";
-import getAccountByIdSchema from "./getAccountById";
+import createAccountSchema from './createAccountSchema';
+import getAccountByIdSchema from './getAccountById';
 
 export default {
   createAccountSchema,
