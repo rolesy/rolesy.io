@@ -1,6 +1,6 @@
 import accountModel from "../../../../models/account";
 
-const findAccountByName = ({ name }) =>
+const findAccountByName = (name) =>
   accountModel
     .findOne({
       name,
