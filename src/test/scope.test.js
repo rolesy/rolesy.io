@@ -308,7 +308,7 @@ describe('Get Scopes', () => {
       .expect(400);
   }, 20000);
 
-  test('If page is not a number integer positive (include zero (0)) should return status code 400', async () => {
+  test('If page is not a number integer positive greater than zero (0) should return status code 400', async () => {
     const credentials = {
       username: 'user-tests',
       password: 'Usertests123*',
