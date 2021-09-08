@@ -4,7 +4,7 @@
   "description": "Recruitment process app managment",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node --es-module-specifier-resolution=node ./src/index.js",
+    "start": "shx rm -rf logs && npm run build && node --es-module-specifier-resolution=node ./src/index.js",
     "test": "jest --verbose --silent",
     "test:watch": "npm run test -- --watch",
     "dev": "nodemon --experimental-modules --es-module-specifier-resolution=node ./src/index.js",
