@@ -10,6 +10,7 @@ const getScopes = async ({
   order = 'createdAt',
 }) => {
   if (!page || !limit) throw boom.badRequest('page and limit are required');
+  const skip = (Number(page) * Number(limit)) - limit;
   const query = { filters: { $and: [] } };
 
   if (module) {
@@ -33,7 +34,7 @@ const getScopes = async ({
 
   const [result, count] = await Promise.all([
     scopeDao.findScopes({
-      page,
+      page: skip,
       limit,
       query: query.filters.$and.length
         ? { filters: { $and: query.filters.$and }, order: query.order }

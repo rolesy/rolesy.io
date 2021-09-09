@@ -1,7 +1,7 @@
 import joi from 'joi';
 
 const getScopesSchema = joi.object({
-  page: joi.number().positive().integer().allow(0)
+  page: joi.number().positive().integer()
     .required()
     .messages({
       'any.required': 'page is required',
