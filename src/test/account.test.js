@@ -1,158 +1,159 @@
-import mongoose from 'mongoose';
-import supertest from 'supertest';
-import serverConfig from '../app';
-import Mongo from '../db/mongo';
-import env from '../configs';
-import { getDatabaseUrlMongo } from '../utils/libs/utils';
+import mongoose from "mongoose";
+import supertest from "supertest";
+import serverConfig from "../app";
+import Mongo from "../db/mongo";
+import env from "../configs";
+import { getDatabaseUrlMongo } from "../utils/libs/utils";
+import { response } from "express";
 
 const api = supertest(serverConfig.app);
 const mongoDB = new Mongo(
-  getDatabaseUrlMongo(env.ENVIRONMENT || 'DEVELOPMENT'),
+  getDatabaseUrlMongo(env.ENVIRONMENT || "DEVELOPMENT")
 );
 
 const credentials = {
-  username: 'user-tests',
-  password: 'Usertests123*',
+  username: "user-tests",
+  password: "Usertests123*",
 };
 
 const databaseConnection = async () => {
   await mongoDB.connectMongoDB();
   const responseLogin = await api
-    .post('/api/v1/authentication/login')
+    .post("/api/v1/authentication/login")
     .send(credentials);
   const { token } = responseLogin.body.data;
   return token;
 };
 
-describe('Component - account', () => {
-  test('Endpoint - Create Account - If there is not bearer token should return status code 401', async () => {
+describe("Create - account", () => {
+  test("Endpoint - Create Account - If there is not bearer token should return status code 401", async () => {
     const newAccount = {
-      name: 'ACCOUNT NAME',
-      description: 'EXAMPLE DESCRIPTION',
+      name: "ACCOUNT NAME",
+      description: "EXAMPLE DESCRIPTION",
       billingInformation: {
-        companyName: 'COMPANY',
-        name: 'BILL ACCOUNT NAME',
-        phone: '1234567890',
-        email: 'account1@account1.com',
-        address: 'California 54-66',
-        zipCode: '33020',
-        city: 'Florida',
-        country: 'USA',
-        state: 'FL',
+        companyName: "COMPANY",
+        name: "BILL ACCOUNT NAME",
+        phone: "1234567890",
+        email: "account1@account1.com",
+        address: "California 54-66",
+        zipCode: "33020",
+        city: "Florida",
+        country: "USA",
+        state: "FL",
       },
       contactInformation: {
-        name: 'ALEXANDER IBAI',
-        phone: '1234567890',
-        email: 'alexander@account1.com',
+        name: "ALEXANDER IBAI",
+        phone: "1234567890",
+        email: "alexander@account1.com",
       },
       active: true,
     };
     await mongoDB.connectMongoDB();
 
     await api
-      .post('/api/v1/scope')
+      .post("/api/v1/scope")
       .send(newAccount)
-      .expect('Content-Type', /application\/json/)
+      .expect("Content-Type", /application\/json/)
       .expect(401);
   });
 
-  test('Endpoint - Create Account - If account name is not send in the request, should return a status code 400', async () => {
+  test("Endpoint - Create Account - If account name is not send in the request, should return a status code 400", async () => {
     const newAccount = {
-      description: 'EXAMPLE DESCRIPTION',
+      description: "EXAMPLE DESCRIPTION",
       billingInformation: {
-        companyName: 'COMPANY',
-        name: 'BILL ACCOUNT NAME',
-        phone: '1234567890',
-        email: 'account1@account1.com',
-        address: 'California 54-66',
-        zipCode: '33020',
-        city: 'Florida',
-        country: 'USA',
-        state: 'FL',
+        companyName: "COMPANY",
+        name: "BILL ACCOUNT NAME",
+        phone: "1234567890",
+        email: "account1@account1.com",
+        address: "California 54-66",
+        zipCode: "33020",
+        city: "Florida",
+        country: "USA",
+        state: "FL",
       },
       contactInformation: {
-        name: 'ALEXANDER IBAI',
-        phone: '1234567890',
-        email: 'alexander@account1.com',
+        name: "ALEXANDER IBAI",
+        phone: "1234567890",
+        email: "alexander@account1.com",
       },
       active: true,
     };
     const token = await databaseConnection();
 
     await api
-      .post('/api/v1/account')
+      .post("/api/v1/account")
       .send(newAccount)
-      .set('Authorization', `Bearer ${token}`)
-      .expect('Content-Type', /application\/json/)
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
       .expect(400);
   });
 
-  test('Endpoint - Create Account - If account description is not send in the request, should return a status code 400', async () => {
+  test("Endpoint - Create Account - If account description is not send in the request, should return a status code 400", async () => {
     const newAccount = {
-      name: 'ACCOUNT NAME',
+      name: "ACCOUNT NAME",
       billingInformation: {
-        companyName: 'COMPANY',
-        name: 'BILL ACCOUNT NAME',
-        phone: '1234567890',
-        email: 'account1@account1.com',
-        address: 'California 54-66',
-        zipCode: '33020',
-        city: 'Florida',
-        country: 'USA',
-        state: 'FL',
+        companyName: "COMPANY",
+        name: "BILL ACCOUNT NAME",
+        phone: "1234567890",
+        email: "account1@account1.com",
+        address: "California 54-66",
+        zipCode: "33020",
+        city: "Florida",
+        country: "USA",
+        state: "FL",
       },
       contactInformation: {
-        name: 'ALEXANDER IBAI',
-        phone: '1234567890',
-        email: 'alexander@account1.com',
+        name: "ALEXANDER IBAI",
+        phone: "1234567890",
+        email: "alexander@account1.com",
       },
       active: true,
     };
     const token = await databaseConnection();
 
     await api
-      .post('/api/v1/account')
+      .post("/api/v1/account")
       .send(newAccount)
-      .set('Authorization', `Bearer ${token}`)
-      .expect('Content-Type', /application\/json/)
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
       .expect(400);
   });
 
-  test('Endpoint - Create Account - If account billingInformation is not send in the request, should return a status code 400', async () => {
+  test("Endpoint - Create Account - If account billingInformation is not send in the request, should return a status code 400", async () => {
     const newAccount = {
-      name: 'ACCOUNT NAME 3',
-      description: 'EXAMPLE DESCRIPTION',
+      name: "ACCOUNT NAME 3",
+      description: "EXAMPLE DESCRIPTION",
       contactInformation: {
-        name: 'ALEXANDER IBAI',
-        phone: '1234567890',
-        email: 'alexander@account1.com',
+        name: "ALEXANDER IBAI",
+        phone: "1234567890",
+        email: "alexander@account1.com",
       },
       active: true,
     };
     const token = await databaseConnection();
 
     await api
-      .post('/api/v1/account')
+      .post("/api/v1/account")
       .send(newAccount)
-      .set('Authorization', `Bearer ${token}`)
-      .expect('Content-Type', /application\/json/)
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
       .expect(400);
   });
 
-  test('Endpoint - Create Account - If account contactInformation is not send in the request, should return a status code 400', async () => {
+  test("Endpoint - Create Account - If account contactInformation is not send in the request, should return a status code 400", async () => {
     const newAccount = {
-      name: 'ACCOUNT NAME',
-      description: 'EXAMPLE DESCRIPTION',
+      name: "ACCOUNT NAME",
+      description: "EXAMPLE DESCRIPTION",
       billingInformation: {
-        companyName: 'COMPANY',
-        name: 'BILL ACCOUNT NAME',
-        phone: '1234567890',
-        email: 'account1@account1.com',
-        address: 'California 54-66',
-        zipCode: '33020',
-        city: 'Florida',
-        country: 'USA',
-        state: 'FL',
+        companyName: "COMPANY",
+        name: "BILL ACCOUNT NAME",
+        phone: "1234567890",
+        email: "account1@account1.com",
+        address: "California 54-66",
+        zipCode: "33020",
+        city: "Florida",
+        country: "USA",
+        state: "FL",
       },
       active: true,
     };
@@ -160,14 +161,81 @@ describe('Component - account', () => {
     const token = await databaseConnection();
 
     await api
-      .post('/api/v1/account')
+      .post("/api/v1/account")
       .send(newAccount)
-      .set('Authorization', `Bearer ${token}`)
-      .expect('Content-Type', /application\/json/)
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
       .expect(400);
   });
 
   afterAll(() => {
     mongoose.connection.close();
+  });
+});
+
+describe("Get Account by ID", () => {
+  test("If there is not bearer token should return status code 401", async () => {
+    await mongoDB.connectMongoDB();
+
+    await api
+      .get("/api/v1/account/613811dbae8adc538c0c2b24")
+      .expect("Content-Type", /application\/json/)
+      .expect(401);
+  }, 25000);
+
+  test("If there is not sent an ID should return a status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(404);
+  });
+
+  test("If the ID sent in the request is not a valid Object ID format", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/test_id")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  });
+  test("If the ID has a correct format but there is any scope saved with that ID should return a 400", async () => {
+    const token = await databaseConnection();
+
+    const response = await api
+      .get("/api/v1/account/613811dbae8adc538c0c2b21")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: expect.any(Boolean),
+        message: expect.any(String),
+      })
+    );
+  });
+
+  test("If there is a valid ID and find a document should return the document and a status 200", async () => {
+    const token = await databaseConnection();
+
+    const response = await api
+      .get("/api/v1/account/613811dbae8adc538c0c2b24")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(200);
+
+    expect(response.body.data).toEqual(
+      expect.objectContaining({
+        active: expect.any(Boolean),
+        _id: expect.any(String),
+        name: expect.any(String),
+        description: expect.any(String),
+        billingInformation: expect.any(Object),
+        contactInformation: expect.any(Object),
+      })
+    );
   });
 });

@@ -23,7 +23,7 @@ router.get(
 );
 
 router.get(
-  '/',
+  '/list',
   loggedIn,
   requestSchemaHandler(scopeSchemas.getScopesSchema, 'query'),
   asyncHandler(scopeController.getScopes),
