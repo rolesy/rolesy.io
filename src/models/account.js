@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const accountSchema = mongoose.Schema(
   {
@@ -13,11 +13,11 @@ const accountSchema = mongoose.Schema(
       uppercase: true,
       required: true,
     },
-    billing_information: {
+    billingInformation: {
       type: Object,
       required: true,
     },
-    contact_information: {
+    contactInformation: {
       type: Object,
       required: true,
     },
@@ -28,10 +28,10 @@ const accountSchema = mongoose.Schema(
     },
   },
   {
-    timestamp: true,
-  }
+    timestamps: true,
+  },
 );
 
-const accountModel = mongoose.model("accounts", accountSchema);
+const accountModel = mongoose.model('accounts', accountSchema);
 
 export default accountModel;

@@ -16,4 +16,18 @@ router.post(
   asyncHandler(accountController.createAccount)
 );
 
+router.get(
+  "/list",
+  loggedIn,
+  requestSchemaHandler(accountSchema.getAccountsSchema, "query"),
+  asyncHandler(accountController.getAccounts)
+);
+
+router.get(
+  "/:id",
+  loggedIn,
+  requestSchemaHandler(accountSchema.getAccountByIdSchema, "params"),
+  asyncHandler(accountController.getAccountById)
+);
+
 export default router;

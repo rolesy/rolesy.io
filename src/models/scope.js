@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const scopeSchema = mongoose.Schema(
   {
@@ -25,10 +25,10 @@ const scopeSchema = mongoose.Schema(
     },
   },
   {
-    timestamp: true,
-  }
+    timestamps: true,
+  },
 );
 
-const scopeModel = mongoose.model("scopes", scopeSchema);
+const scopeModel = mongoose.model('scopes', scopeSchema);
 
 export default scopeModel;
