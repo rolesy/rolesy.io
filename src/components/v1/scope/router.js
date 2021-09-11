@@ -15,12 +15,6 @@ router.post(
   requestSchemaHandler(scopeSchemas.createScopeSchema),
   asyncHandler(scopeController.createScope),
 );
-router.get(
-  '/:id',
-  loggedIn,
-  requestSchemaHandler(scopeSchemas.getScopeByIdSchema, 'params'),
-  asyncHandler(scopeController.getScopeById),
-);
 
 router.get(
   '/list',
@@ -28,5 +22,13 @@ router.get(
   requestSchemaHandler(scopeSchemas.getScopesSchema, 'query'),
   asyncHandler(scopeController.getScopes),
 );
+router.get(
+  '/:id',
+  loggedIn,
+  requestSchemaHandler(scopeSchemas.getScopeByIdSchema, 'params'),
+  asyncHandler(scopeController.getScopeById),
+);
+
+
 
 export default router;
