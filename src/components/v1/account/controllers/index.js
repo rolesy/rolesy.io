@@ -24,8 +24,17 @@ const getAccounts = async (req, res) => {
   });
 };
 
+const deleteAccountById = async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: "Success",
+    data: await accountServices.deleteAccountById(req.params.id),
+  });
+};
+
 export default {
   createAccount,
   getAccountById,
   getAccounts,
+  deleteAccountById,
 };
