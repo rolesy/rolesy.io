@@ -30,4 +30,11 @@ router.get(
   asyncHandler(accountController.getAccountById)
 );
 
+router.delete(
+  "/:id",
+  loggedIn,
+  requestSchemaHandler(accountSchema.deleteAccountByIdSchema, "params"),
+  asyncHandler(accountController.deleteAccountById)
+);
+
 export default router;

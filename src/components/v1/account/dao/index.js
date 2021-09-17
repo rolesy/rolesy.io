@@ -24,10 +24,13 @@ const findAccounts = ({ page, limit, query }) =>
 const findAccountsCount = ({ query }) =>
   accountModel.find(query.filters).countDocuments().lean().exec();
 
+const deleteAccountById = (id) => accountModel.remove({ _id: id });
+
 export default {
   findAccountByName,
   newAccount,
   getAccountById,
   findAccounts,
   findAccountsCount,
+  deleteAccountById,
 };
