@@ -182,7 +182,7 @@ describe("Get Account by ID", () => {
       .expect(401);
   }, 25000);
 
-  test("If there is not sent an ID should return a status code 400", async () => {
+  test("If there is not sent an ID should return a status code 404", async () => {
     const token = await databaseConnection();
 
     await api
@@ -192,7 +192,7 @@ describe("Get Account by ID", () => {
       .expect(404);
   });
 
-  test("If the ID sent in the request is not a valid Object ID format", async () => {
+  test("If the ID sent in the request is not a valid Object ID format should return a status code 400", async () => {
     const token = await databaseConnection();
 
     await api
@@ -222,7 +222,7 @@ describe("Get Account by ID", () => {
     const token = await databaseConnection();
 
     const response = await api
-      .get("/api/v1/account/61414ff50aaf6d3f34f1abe3")
+      .get("/api/v1/account/6144070bcce4dc27b0deb053")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.statusCode).toEqual(200);
@@ -330,7 +330,7 @@ describe("Delete Account by ID", () => {
       .expect(401);
   }, 25000);
 
-  test("If there is not sent an ID should return a status code 400", async () => {
+  test("If there is not sent an ID should return a status code 404", async () => {
     const token = await databaseConnection();
 
     await api
@@ -340,7 +340,7 @@ describe("Delete Account by ID", () => {
       .expect(404);
   });
 
-  test("If the ID sent in the request is not a valid Object ID format", async () => {
+  test("If the ID sent in the request is not a valid Object ID format should return a status code 400", async () => {
     const token = await databaseConnection();
 
     await api
@@ -370,7 +370,7 @@ describe("Delete Account by ID", () => {
     const token = await databaseConnection();
 
     const response = await api
-      .delete("/api/v1/account/61414ff50aaf6d3f34f1abe3")
+      .delete("/api/v1/account/6144070bcce4dc27b0deb053")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.statusCode).toEqual(200);
