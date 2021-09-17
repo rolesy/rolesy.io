@@ -192,7 +192,7 @@ describe('Get Scope by ID', () => {
       .expect(401);
   }, 25000);
 
-  test('If there is not sent an ID should return a status code 400', async () => {
+  test('If there is not sent an ID should return a status code 404', async () => {
     const credentials = {
       username: 'user-tests',
       password: 'Usertests123*',
@@ -207,7 +207,7 @@ describe('Get Scope by ID', () => {
       .get('/api/v1/scope')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
-      .expect(400);
+      .expect(404);
   });
 
   test('If the ID sent in the request is not a valid Object ID format', async () => {
@@ -285,7 +285,7 @@ describe('Get Scopes', () => {
     await mongoDb.connectMongoDB();
 
     await api
-      .get('/api/v1/scope?page=0&limit=2')
+      .get('/api/v1/scope/list?page=0&limit=2')
       .expect('Content-Type', /application\/json/)
       .expect(401);
   }, 20000);
@@ -302,7 +302,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?limit=2')
+      .get('/api/v1/scope/list?limit=2')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
@@ -320,7 +320,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?page=-1&limit=2')
+      .get('/api/v1/scope/list?page=-1&limit=2')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
@@ -338,7 +338,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?page=-1')
+      .get('/api/v1/scope/list?page=-1')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
@@ -356,7 +356,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?page=0&limit=0')
+      .get('/api/v1/scope/list?page=1&limit=0')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
@@ -374,7 +374,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?page=0&limit=10&module=TEST')
+      .get('/api/v1/scope/list?page=0&limit=10&module=TEST')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(400);
@@ -392,7 +392,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     await api
-      .get('/api/v1/scope?page=0&limit=10&module=ACCOUNTS')
+      .get('/api/v1/scope/list?page=1&limit=10&module=ACCOUNTS')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /application\/json/)
       .expect(200);
@@ -410,7 +410,7 @@ describe('Get Scopes', () => {
     const { token } = responseLogin.body.data;
 
     const response = await api
-      .get('/api/v1/scope?page=0&limit=10&module=ACCOUNTS')
+      .get('/api/v1/scope/list?page=1&limit=10&module=ACCOUNTS')
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.body.data).toEqual(expect.objectContaining({

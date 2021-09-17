@@ -239,3 +239,83 @@ describe("Get Account by ID", () => {
     );
   });
 });
+
+describe("Get Account list", () => {
+  test("If there is not bearer token should return status code 401", async () => {
+    await mongoDB.connectMongoDB();
+
+    await api
+      .get("/api/v1/account/list")
+      .expect("Content-Type", /application\/json/)
+      .expect(401);
+  }, 25000);
+
+  test("If there is not sent a page value should return status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/list")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  }, 20000);
+
+  test("If page is not a number integer positive grater than zero (0) should status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/list?page=-1&limit=2")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  }, 20000);
+
+  test("If there is not sent limit value should return status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/list?page=1")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  }, 20000);
+
+  test("If limit value is not a number integer positive grater or equal to 1 should return status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/list?page=1&limit=0")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  }, 20000);
+
+  test("If everything goes well should return status code 200", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .get("/api/v1/account/list?page=1&limit=10")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(200);
+  }, 20000);
+
+  test("If everything goes well the body must containe a property accounts that is an array and other records that is a number", async () => {
+    const token = await databaseConnection();
+
+    const response = await api
+      .get("/api/v1/account/list?page=1&limit=10")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.body.data).toEqual(
+      expect.objectContaining({
+        accounts: expect.any(Array),
+        records: expect.any(Number),
+      })
+    );
+  }, 20000);
+
+  afterAll(() => {
+    mongoose.connection.close();
+  });
+});
