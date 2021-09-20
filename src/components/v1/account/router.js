@@ -30,6 +30,14 @@ router.get(
   asyncHandler(accountController.getAccountById)
 );
 
+router.put(
+  "/:id",
+  loggedIn,
+  requestSchemaHandler(accountSchema.getAccountByIdSchema, "params"),
+  requestSchemaHandler(accountSchema.createAccountSchema),
+  asyncHandler(accountController.updateAccount)
+);
+
 router.delete(
   "/:id",
   loggedIn,
