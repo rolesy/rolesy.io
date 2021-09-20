@@ -4,7 +4,6 @@ import serverConfig from "../app";
 import Mongo from "../db/mongo";
 import env from "../configs";
 import { getDatabaseUrlMongo } from "../utils/libs/utils";
-import { response } from "express";
 
 const api = supertest(serverConfig.app);
 const mongoDB = new Mongo(
@@ -183,7 +182,7 @@ describe("Get Account by ID", () => {
       .expect(401);
   }, 25000);
 
-  test("If there is not sent an ID should return a status code 400", async () => {
+  test("If there is not sent an ID should return a status code 404", async () => {
     const token = await databaseConnection();
 
     await api
@@ -193,7 +192,7 @@ describe("Get Account by ID", () => {
       .expect(404);
   });
 
-  test("If the ID sent in the request is not a valid Object ID format", async () => {
+  test("If the ID sent in the request is not a valid Object ID format should return a status code 400", async () => {
     const token = await databaseConnection();
 
     await api
@@ -202,7 +201,8 @@ describe("Get Account by ID", () => {
       .expect("Content-Type", /application\/json/)
       .expect(400);
   });
-  test("If the ID has a correct format but there is any scope saved with that ID should return a 400", async () => {
+
+  test("If the ID has a correct format but there is any account saved with that ID should return a 400", async () => {
     const token = await databaseConnection();
 
     const response = await api
@@ -222,7 +222,7 @@ describe("Get Account by ID", () => {
     const token = await databaseConnection();
 
     const response = await api
-      .get("/api/v1/account/613811dbae8adc538c0c2b24")
+      .get("/api/v1/account/6144070bcce4dc27b0deb053")
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.statusCode).toEqual(200);
@@ -317,5 +317,69 @@ describe("Get Account list", () => {
 
   afterAll(() => {
     mongoose.connection.close();
+  });
+});
+
+describe("Delete Account by ID", () => {
+  test("If there is not bearer token should return status code 401", async () => {
+    await mongoDB.connectMongoDB();
+
+    await api
+      .delete("/api/v1/account/613811dbae8adc538c0c2b24")
+      .expect("Content-Type", /application\/json/)
+      .expect(401);
+  }, 25000);
+
+  test("If there is not sent an ID should return a status code 404", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .delete("/api/v1/account")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(404);
+  });
+
+  test("If the ID sent in the request is not a valid Object ID format should return a status code 400", async () => {
+    const token = await databaseConnection();
+
+    await api
+      .delete("/api/v1/account/test_id")
+      .set("Authorization", `Bearer ${token}`)
+      .expect("Content-Type", /application\/json/)
+      .expect(400);
+  });
+
+  test("If the ID has a correct format but there is any account saved with that ID should return a 400", async () => {
+    const token = await databaseConnection();
+
+    const response = await api
+      .delete("/api/v1/account/613811dbae8adc538c0c2b21")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: expect.any(Boolean),
+        message: expect.any(String),
+      })
+    );
+  });
+
+  test("If there is a valid ID and find a document should return a message and a status 200", async () => {
+    const token = await databaseConnection();
+
+    const response = await api
+      .delete("/api/v1/account/6144070bcce4dc27b0deb053")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(response.statusCode).toEqual(200);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        status: expect.any(Number),
+        message: expect.any(String),
+      })
+    );
   });
 });
