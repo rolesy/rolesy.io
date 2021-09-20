@@ -24,6 +24,14 @@ const getAccounts = async (req, res) => {
   });
 };
 
+const updateAccount = async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: "Success",
+    data: await accountServices.updateAccount(req.params.id, { ...req.body }),
+  });
+};
+
 const deleteAccountById = async (req, res) => {
   res.status(200).json({
     status: 200,
@@ -36,5 +44,6 @@ export default {
   createAccount,
   getAccountById,
   getAccounts,
+  updateAccount,
   deleteAccountById,
 };

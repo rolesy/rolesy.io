@@ -26,11 +26,15 @@ const findAccountsCount = ({ query }) =>
 
 const deleteAccountById = (id) => accountModel.remove({ _id: id });
 
+const updateAccount = (id, account) =>
+  accountModel.findOneAndUpdate(id, { ...account });
+
 export default {
   findAccountByName,
   newAccount,
   getAccountById,
   findAccounts,
   findAccountsCount,
+  updateAccount,
   deleteAccountById,
 };
