@@ -11,9 +11,8 @@ const createAccount = async ({
 }) => {
   const validateUniqueAccount = await accountDao.findAccountByName(name);
 
-  if (validateUniqueAccount) {
+  if (validateUniqueAccount)
     throw boom.badRequest(`Account: ${name} already exists`);
-  }
 
   const createdAccount = await accountDao.newAccount({
     name,
